@@ -37,6 +37,7 @@ SettingsActivity extends PreferenceActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Add 'general' preferences, defined in the XML file
+        //super cunt super test
         // TODO: Add preferences from XML
 
         // For all preferences, attach an OnPreferenceChangeListener so the UI summary can be
