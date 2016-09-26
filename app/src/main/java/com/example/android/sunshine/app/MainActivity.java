@@ -16,10 +16,16 @@
 package com.example.android.sunshine.app;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -52,6 +58,24 @@ public class MainActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
+        }
+        else if (id == R.id.action_view_location_map) {
+            String locationSetting = PreferenceManager.getDefaultSharedPreferences(this)
+                    .getString(getString(R.string.pref_location_key),getString(R.string.pref_location_default));
+            Uri geoLocation = Uri.parse("geo:0,0?").buildUpon()
+                    .appendQueryParameter("q", locationSetting).build();
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(geoLocation);
+
+            //Verify intent will not crash our app
+            PackageManager packageManager = getPackageManager();
+            List activities = packageManager.queryIntentActivities(intent,
+            PackageManager.MATCH_DEFAULT_ONLY);
+            boolean isIntentSafe = activities.size() > 0;
+            if(isIntentSafe)
+                startActivity(intent);
+            else
+                Toast.makeText(this,R.string.mapintentfailed,Toast.LENGTH_SHORT);
         }
 
         return super.onOptionsItemSelected(item);
